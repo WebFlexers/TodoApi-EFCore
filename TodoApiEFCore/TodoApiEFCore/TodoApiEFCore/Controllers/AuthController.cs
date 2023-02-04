@@ -26,7 +26,7 @@ public class AuthController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpGet("logout")]
+    [HttpGet("/logout")]
     public IActionResult Logout()
     {
         // Clear the authentication cookies and return a successful status code
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("login")]
+    [HttpPost("/login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await userManager.FindByNameAsync(model.Username);

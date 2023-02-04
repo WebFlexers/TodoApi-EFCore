@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using TodoApi.Data;
 using TodoApi.Data.Models;
 
@@ -16,12 +17,14 @@ public class TodosController : ControllerBase
         _context = context;
     }
 
+    // List all todos and todo items
     [HttpGet("/todos/all")]
     public async Task<ActionResult<IEnumerable<TodosModel>>> GetTodos()
     {
         return await _context.Todos.ToListAsync();
     }
 
+    // Get a todos list
     [HttpGet("/todos/{id}")]
     public async Task<ActionResult<TodosModel>> GetTodos(int id)
     {
@@ -35,6 +38,7 @@ public class TodosController : ControllerBase
         return todosModel;
     }
 
+    // Create a new todos list
     [HttpPost("todos/create")]
     public async Task<ActionResult<TodosModel>> CreateTodosList(TodosModel todos)
     {
@@ -44,12 +48,37 @@ public class TodosController : ControllerBase
         return CreatedAtAction("GetToDoItemModel", new { id = todos.TodosId }, todos);
     }
 
+    // Update a todos list
     [HttpPut("/todos/{id}")]
-    public IActionResult Update(int id)
+    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodosModel todo)
     {
-        throw new NotImplementedException();
+        if (id != todo.TodosId)
+        {
+            return BadRequest();
+        }
+
+        _context.Entry(todo).State = EntityState.Modified;
+
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!TodoExists(id))
+            {
+                return NotFound();
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        return NoContent();
     }
 
+    // Delete a todos list and its items
     [HttpDelete("/todos/{id}")]
     public async Task<IActionResult> DeleteToDoItemModel(int id)
     {
@@ -63,5 +92,10 @@ public class TodosController : ControllerBase
         await _context.SaveChangesAsync();
 
         return NoContent();
+    }
+
+    private bool TodoExists(int id)
+    {
+        return _context.Todos.Any(e => e.TodosId == id);
     }
 }

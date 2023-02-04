@@ -21,7 +21,7 @@ public class RegistrationController : ControllerBase
         _configuration = configuration;
     }
 
-    [HttpPost("register")]
+    [HttpPost("/register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         var userExists = await userManager.FindByNameAsync(model.Username);
