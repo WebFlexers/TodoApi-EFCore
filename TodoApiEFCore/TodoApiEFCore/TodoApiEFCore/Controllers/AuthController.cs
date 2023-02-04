@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,7 +29,9 @@ public class AuthController : ControllerBase
     [HttpGet("logout")]
     public IActionResult Logout()
     {
-        throw new NotImplementedException();
+        // Clear the authentication cookies and return a successful status code
+        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Ok();
     }
 
     [HttpPost("login")]
@@ -67,8 +71,4 @@ public class AuthController : ControllerBase
         }
         return Unauthorized();
     }
-
-
-
-
 }
