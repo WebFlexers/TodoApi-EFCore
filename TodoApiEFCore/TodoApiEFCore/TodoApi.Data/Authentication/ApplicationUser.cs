@@ -1,6 +1,8 @@
-﻿namespace TodoApi.Authentication;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TodoApi.Data.Authentication;
 
 public class ApplicationUser : IdentityUser
 {
+
 }

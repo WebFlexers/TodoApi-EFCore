@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using TodoApi.Authentication;
+using TodoApi.Data.Authentication;
 using TodoApi.Data.Models;
 
 

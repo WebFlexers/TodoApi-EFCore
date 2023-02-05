@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TodoApi.Authentication;
 using TodoApi.Data;
+using TodoApi.Data.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 

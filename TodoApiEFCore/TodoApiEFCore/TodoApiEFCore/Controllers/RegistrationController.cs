@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Authentication;
+using TodoApi.Data.Authentication;
 using TodoApi.Data.Models;
 
 namespace TodoApiEFCore.Controllers;
