@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoApi.Data.Models;
-public class RegisterModel
+namespace TodoApi.Data.Entities;
+public class RegisterEntity
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

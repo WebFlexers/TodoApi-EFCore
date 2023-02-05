@@ -220,64 +220,64 @@ namespace TodoApi.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodoItemModel", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodoItemEntity", b =>
                 {
-                    b.Property<int>("ItemId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ItemDescription")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ItemName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("ItemStatus")
+                    b.Property<bool>("Status")
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
-                    b.Property<int>("TodosId")
+                    b.Property<int>("Id")
                         .HasColumnType("int");
 
                     b.Property<int?>("TodosModelTodosId")
                         .HasColumnType("int");
 
-                    b.HasKey("ItemId");
+                    b.HasKey("Id");
 
                     b.HasIndex("TodosModelTodosId");
 
                     b.ToTable("TodoItems");
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodosModel", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodosEntity", b =>
                 {
-                    b.Property<int>("TodosId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodosId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("TodosDescription")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("TodosName")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("TodosStatus")
+                    b.Property<bool>("Status")
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
-                    b.HasKey("TodosId");
+                    b.HasKey("Id");
 
                     b.ToTable("Todos");
                 });
@@ -333,14 +333,14 @@ namespace TodoApi.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodoItemModel", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodoItemEntity", b =>
                 {
-                    b.HasOne("TodoApi.Data.Models.TodosModel", null)
+                    b.HasOne("TodoApi.Data.Models.TodosEntity", null)
                         .WithMany("TodoItems")
                         .HasForeignKey("TodosModelTodosId");
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodosModel", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodosEntity", b =>
                 {
                     b.Navigation("TodoItems");
                 });

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using TodoApi.Authentication;
 using TodoApi.Data.Authentication;
-using TodoApi.Data.Models;
+using TodoApi.Data.Entities;
 
 
 
@@ -15,44 +15,44 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    public DbSet<TodoItemModel> TodoItems { get; set; }
-    public DbSet<TodosModel> Todos { get; set; }
+    public DbSet<TodoItemEntity> TodoItems { get; set; }
+    public DbSet<TodosEntity> Todos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TodosModel>().HasMany(td => td.TodoItems);// 1 -> many
+        modelBuilder.Entity<TodosEntity>().HasMany(td => td.TodoItems);// 1 -> many
        
-        modelBuilder.Entity<TodoItemModel>(entity =>
+        modelBuilder.Entity<TodoItemEntity>(entity =>
         {
-            entity.HasKey(e => e.ItemId);
+            entity.HasKey(e => e.Id);
 
 
-            entity.Property(e => e.ItemName)
+            entity.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(100);
 
-            entity.Property(e => e.ItemDescription)
+            entity.Property(e => e.Description)
             .IsRequired()
             .HasMaxLength(100);
 
-            entity.Property(e => e.ItemStatus)
+            entity.Property(e => e.Status)
             .IsRequired()
             .HasMaxLength(1);
         });
 
-        modelBuilder.Entity<TodosModel>(entity =>
+        modelBuilder.Entity<TodosEntity>(entity =>
         {
-            entity.HasKey(e => e.TodosId);
+            entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.TodosName)
+            entity.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(100);
 
-            entity.Property(e => e.TodosDescription)
+            entity.Property(e => e.Description)
             .IsRequired()
             .HasMaxLength(100);
 
-            entity.Property(e => e.TodosStatus)
+            entity.Property(e => e.Status)
             .IsRequired()
             .HasMaxLength(1);
         });

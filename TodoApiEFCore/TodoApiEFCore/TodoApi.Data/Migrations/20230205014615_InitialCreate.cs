@@ -190,7 +190,7 @@ namespace TodoApi.Data.Migrations
                         name: "FK_TodoItems_Todos_TodosModelTodosId",
                         column: x => x.TodosModelTodosId,
                         principalTable: "Todos",
-                        principalColumn: "TodosId");
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(

@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoApi.Data.Models;
+namespace TodoApi.Data.Entities;
 
-public class LoginModel
+public class LoginEntity
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

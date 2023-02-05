@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using TodoApi.Data;
-using TodoApi.Data.Models;
+using TodoApi.Data.Entities;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -19,7 +19,7 @@ public class TodosController : ControllerBase
 
     // List all todos and todo items
     [HttpGet("/todos/all")]
-    public async Task<ActionResult<IEnumerable<TodosModel>>> GetTodosAll()
+    public async Task<ActionResult<IEnumerable<TodosEntity>>> GetTodosAll()
     {
         var allTodos = await _context.Todos.ToListAsync();
         
@@ -30,7 +30,7 @@ public class TodosController : ControllerBase
 
     // Get a todos list
     [HttpGet("/todos/{id}")]
-    public async Task<ActionResult<TodosModel>> GetTodos(int id)
+    public async Task<ActionResult<TodosEntity>> GetTodos(int id)
     {
         var todosModel = await _context.Todos.FindAsync(id);
 
@@ -44,19 +44,19 @@ public class TodosController : ControllerBase
 
     // Create a new todos list
     [HttpPost("/todos/create")]
-    public async Task<ActionResult<TodosModel>> CreateTodosList([FromBody] TodosModel todos)
+    public async Task<ActionResult<TodosEntity>> CreateTodosList([FromBody] TodosEntity todos)
     {
         _context.Todos.Add(todos);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetTodos", new { id = todos.TodosId }, todos);
+        return CreatedAtAction("GetTodos", new { id = todos.Id }, todos);
     }
 
     // Update a todos list
     [HttpPut("/todos/{id}")]
-    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodosModel todo)
+    public async Task<IActionResult> UpdateTodo(int id, [FromBody] TodosEntity todo)
     {
-        if (id != todo.TodosId)
+        if (id != todo.Id)
         {
             return BadRequest();
         }
@@ -100,6 +100,6 @@ public class TodosController : ControllerBase
 
     private bool TodoExists(int id)
     {
-        return _context.Todos.Any(e => e.TodosId == id);
+        return _context.Todos.Any(e => e.Id == id);
     }
 }

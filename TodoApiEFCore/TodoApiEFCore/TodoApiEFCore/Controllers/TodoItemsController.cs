@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Data;
-using TodoApi.Data.Models;
+using TodoApi.Data.Entities;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -16,7 +16,7 @@ public class TodoItemsController : ControllerBase
 
     // Get all todos items of a specified todo list.
     [HttpGet("/todos/{id}/items/all")]
-    public async Task<ActionResult<IEnumerable<TodoItemModel>>> Get(int id)
+    public async Task<ActionResult<IEnumerable<TodoItemEntity>>> Get(int id)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
@@ -30,7 +30,7 @@ public class TodoItemsController : ControllerBase
 
     // Get a todo item
     [HttpGet("/todos/{id}/items/{iid}")]
-    public async Task<ActionResult<TodoItemModel>> GetATodoItem(int id, int iid)
+    public async Task<ActionResult<TodoItemEntity>> GetATodoItem(int id, int iid)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
@@ -38,7 +38,7 @@ public class TodoItemsController : ControllerBase
             return NotFound();
         }
 
-        var todoItem = todo.TodoItems.SingleOrDefault(item => item.ItemId == iid);
+        var todoItem = todo.TodoItems.SingleOrDefault(item => item.Id == iid);
         if (todoItem == null)
         {
             return NotFound();
@@ -49,26 +49,26 @@ public class TodoItemsController : ControllerBase
 
     // Create a new todo item
     [HttpPost("/todos/{id}/items/create")]
-    public async Task<ActionResult<TodoItemModel>> Post(int id, [FromBody] TodoItemModel item)
+    public async Task<ActionResult<TodoItemEntity>> Post(int id, [FromBody] TodoItemEntity item)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
         {
             return NotFound();
         }
-        todo.TodoItems = new List<TodoItemModel>
+        todo.TodoItems = new List<TodoItemEntity>
         {
             item
         };
 
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetATodoItem", new { id = id, iid = item.ItemId }, item);
+        return CreatedAtAction("GetATodoItem", new { id = id, iid = item.Id }, item);
     }
 
     // Update a todo item
     [HttpPut("/todos/{id}/items/{iid}/update")]
-    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItemModel item)
+    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItemEntity item)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
@@ -76,14 +76,14 @@ public class TodoItemsController : ControllerBase
             return NotFound();
         }
 
-        var todoItem = todo.TodoItems.SingleOrDefault(i => i.ItemId == iid);
+        var todoItem = todo.TodoItems.SingleOrDefault(i => i.Id == iid);
         if (todoItem == null)
         {
             return NotFound();
         }
 
-        todoItem.ItemName = item.ItemName;
-        todoItem.ItemStatus = item.ItemStatus;
+        todoItem.Name = item.Name;
+        todoItem.Status = item.Status;
 
         await _context.SaveChangesAsync();
 

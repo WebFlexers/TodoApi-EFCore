@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TodoApi.Data.Authentication;
-using TodoApi.Data.Models;
+using TodoApi.Data.Entities;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -35,21 +35,21 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("/login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginEntity entity)
     {
-        if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
+        if (string.IsNullOrWhiteSpace(entity.Username) || string.IsNullOrWhiteSpace(entity.Password))
         {
             return BadRequest();
         }
 
-        var user = await userManager.FindByNameAsync(model.Username);
+        var user = await userManager.FindByNameAsync(entity.Username);
 
         if (user == null)
         {
             return Unauthorized();
         }
 
-        var passwordIsCorrect = await userManager.CheckPasswordAsync(user, model.Password);
+        var passwordIsCorrect = await userManager.CheckPasswordAsync(user, entity.Password);
 
         if (!passwordIsCorrect)
         {

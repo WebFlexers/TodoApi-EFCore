@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Authentication;
 using TodoApi.Data.Authentication;
-using TodoApi.Data.Models;
+using TodoApi.Data.Entities;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -22,7 +22,7 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpPost("/register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
+    public async Task<IActionResult> Register([FromBody] RegisterEntity model)
     {
         var existingUser = await userManager.FindByNameAsync(model.Username);
 
