@@ -6,12 +6,14 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using TodoApi.Data.Authentication;
-using TodoApi.Data.Entities;
+using TodoApi.Data.Entities.DTOs;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[AllowAnonymous]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> userManager;
@@ -27,15 +29,16 @@ public class AuthController : ControllerBase
     }
 
     [HttpGet("/logout")]
+    [Authorize]
     public IActionResult Logout()
     {
         // Clear the authentication cookies and return a successful status code
-        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        HttpContext.SignOutAsync();
         return Ok();
     }
 
     [HttpPost("/login")]
-    public async Task<IActionResult> Login([FromBody] Login entity)
+    public async Task<IActionResult> Login([FromBody] LoginDTO entity)
     {
         if (string.IsNullOrWhiteSpace(entity.Username) || string.IsNullOrWhiteSpace(entity.Password))
         {
@@ -59,6 +62,7 @@ public class AuthController : ControllerBase
         var userRoles = await userManager.GetRolesAsync(user);
         var authClaims = new List<Claim>
         {
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(ClaimTypes.Name, user.UserName!),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };

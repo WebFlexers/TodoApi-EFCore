@@ -1,18 +1,52 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
+using Microsoft.OpenApi.Models;
 using TodoApi.Authentication;
 using TodoApi.Data;
 using TodoApi.Data.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options => {
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var securityScheme = new OpenApiSecurityScheme()
+{
+    Name = "Authorization",
+    Description = "JWT Authorization header info using bearer tokens",
+    In = ParameterLocation.Header,
+    Type = SecuritySchemeType.Http,
+    Scheme = "bearer",
+    BearerFormat = "JWT"
+};
+
+var securityRequirements = new OpenApiSecurityRequirement
+{
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "bearerAuth"
+            }
+        },
+        new string[] {}
+    }
+};
+
+builder.Services.AddSwaggerGen(opts =>
+{
+    opts.AddSecurityDefinition("bearerAuth", securityScheme);
+    opts.AddSecurityRequirement(securityRequirements);
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
@@ -21,6 +55,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
            .AddEntityFrameworkStores<ApplicationDbContext>()
            .AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization(opts =>
+{
+    opts.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 builder.Services.AddAuthentication(options =>
 {

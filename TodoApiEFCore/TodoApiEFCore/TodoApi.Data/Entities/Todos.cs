@@ -1,4 +1,6 @@
-﻿namespace TodoApi.Data.Entities;
+﻿using TodoApi.Data.Authentication;
+
+namespace TodoApi.Data.Entities;
 public class Todos
 {
     public int Id { get; set; }
@@ -7,4 +9,7 @@ public class Todos
     public bool Status { get; set; }
 
     public List<TodoItem> TodoItems { get; set; }
+
+    public string UserId { get; set; }
+    public virtual ApplicationUser User { get; set; }
 }

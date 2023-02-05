@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Authentication;
 using TodoApi.Data.Authentication;
-using TodoApi.Data.Entities;
+using TodoApi.Data.Entities.DTOs;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
 [ApiController]
+[AllowAnonymous]
 public class RegistrationController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> userManager;
@@ -22,7 +24,7 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpPost("/register")]
-    public async Task<IActionResult> Register([FromBody] Register model)
+    public async Task<IActionResult> Register([FromBody] RegisterDTO model)
     {
         var existingUser = await userManager.FindByNameAsync(model.Username);
 
@@ -31,7 +33,7 @@ public class RegistrationController : ControllerBase
             return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "Error", Message = "User already exists!" });
         };
 
-        ApplicationUser user = new ApplicationUser()
+        ApplicationUser user = new ApplicationUser
         {
             Email = model.Email,
             SecurityStamp = Guid.NewGuid().ToString(),

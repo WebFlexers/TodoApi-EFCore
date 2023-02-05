@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoApi.Data.Entities;
+namespace TodoApi.Data.Entities.DTOs;
 
-public class Login
+public class LoginDTO
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

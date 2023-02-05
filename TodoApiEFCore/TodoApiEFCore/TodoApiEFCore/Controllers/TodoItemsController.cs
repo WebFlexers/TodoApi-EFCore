@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.Data.Entities;
+using TodoApi.Data.Entities.DTOs;
+using TodoApiEFCore.Utilities;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -18,13 +20,20 @@ public class TodoItemsController : ControllerBase
     [HttpGet("/todos/{id}/items/all")]
     public async Task<ActionResult<IEnumerable<TodoItem>>> Get(int id)
     {
-        var todo = await _context.Todos.FindAsync(id);
-        if (todo == null)
+        var todoItems = await _context.TodoItems
+            .AsNoTracking()
+            .Where(t => 
+                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.TodosId.Equals(id)
+            )
+            .ToListAsync();
+
+        if (todoItems == null)
         {
             return NotFound();
         }
 
-        return todo.TodoItems.ToList();
+        return Ok(todoItems);
     }
 
 
@@ -32,62 +41,73 @@ public class TodoItemsController : ControllerBase
     [HttpGet("/todos/{id}/items/{iid}")]
     public async Task<ActionResult<TodoItem>> GetATodoItem(int id, int iid)
     {
-        var todo = await _context.Todos.FindAsync(id);
-        if (todo == null)
-        {
-            return NotFound();
-        }
+        var todoItem = await _context.TodoItems
+            .AsNoTracking()
+            .Where(t =>
+                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.TodosId.Equals(id)
+            )
+            .FirstOrDefaultAsync(t => t.Id.Equals(iid));
 
-        var todoItem = todo.TodoItems.SingleOrDefault(item => item.Id == iid);
         if (todoItem == null)
         {
             return NotFound();
         }
 
-        return todoItem;
+        return Ok(todoItem);
     }
 
     // Create a new todo item
     [HttpPost("/todos/{id}/items/create")]
-    public async Task<ActionResult<TodoItem>> Post(int id, [FromBody] TodoItem item)
+    public async Task<ActionResult<TodoItem>> Post(int id, [FromBody] TodoItemDTO itemDTO)
     {
-        var todo = await _context.Todos.FindAsync(id);
-        if (todo == null)
-        {
-            return NotFound();
-        }
-        todo.TodoItems = new List<TodoItem>
-        {
-            item
-        };
+        var todoItem = await _context.Todos
+            .Where(t =>
+                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.Id.Equals(id)
+            )
+            .Select(t => new TodoItem
+            {
+                Name = itemDTO.Name,
+                Description = itemDTO.Description,
+                Status = itemDTO.Status,
+                UserId = IdentityUtilities.GetUserId(User),
+                TodosId = id
+            }).FirstOrDefaultAsync();
 
+        if (todoItem == null)
+        {
+            return NotFound("Wrong Todos Id");
+        }
+
+        _context.TodoItems.Add(todoItem);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetATodoItem", new { id = id, iid = item.Id }, item);
+        return Ok(todoItem);
     }
 
     // Update a todo item
     [HttpPut("/todos/{id}/items/{iid}/update")]
-    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItem item)
+    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItemDTO item)
     {
-        var todo = await _context.Todos.FindAsync(id);
-        if (todo == null)
-        {
-            return NotFound();
-        }
+        var todoItem = await _context.TodoItems
+            .Where(t =>
+                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.TodosId.Equals(id)
+            ).FirstOrDefaultAsync(t => t.Id.Equals(iid));
 
-        var todoItem = todo.TodoItems.SingleOrDefault(i => i.Id == iid);
         if (todoItem == null)
         {
             return NotFound();
         }
 
         todoItem.Name = item.Name;
+        todoItem.Description = item.Description;
         todoItem.Status = item.Status;
 
         await _context.SaveChangesAsync();
 
-        return NoContent();
+        return Ok(todoItem);
     }
 
 
@@ -95,13 +115,12 @@ public class TodoItemsController : ControllerBase
     [HttpDelete("/todos/{id}/items/{iid}")]
     public async Task<IActionResult> DeleteTodoItem(int id, int iid)
     {
-        var todoList = await _context.Todos.FindAsync(id);
-        if (todoList == null)
-        {
-            return NotFound();
-        }
+        var todoItem = await _context.TodoItems
+            .Where(t =>
+                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.TodosId.Equals(id)
+            ).FirstOrDefaultAsync(t => t.Id.Equals(iid));
 
-        var todoItem = await _context.TodoItems.FindAsync(iid);
         if (todoItem == null)
         {
             return NotFound();
