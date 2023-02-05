@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoApi.Data;
 using TodoApi.Data.Entities;
+using TodoApi.Data.Entities.DTOs;
 
 namespace TodoApiEFCore.Controllers;
 [Route("api/[controller]")]
@@ -15,8 +16,8 @@ public class TodosController : ControllerBase
         _context = context;
     }
 
-    // List all todos and todo items
-    [HttpGet("/todos/all")]
+    // List all todosDTO and todo items
+    [HttpGet("/todosDTO/all")]
     public async Task<ActionResult<IEnumerable<Todos>>> GetTodosAll()
     {
         var allTodos = await _context.Todos.ToListAsync();
@@ -26,8 +27,8 @@ public class TodosController : ControllerBase
 
     }
 
-    // Get a todos list
-    [HttpGet("/todos/{id}")]
+    // Get a todosDTO list
+    [HttpGet("/todosDTO/{id}")]
     public async Task<ActionResult<Todos>> GetTodos(int id)
     {
         var todosModel = await _context.Todos.FindAsync(id);
@@ -40,48 +41,45 @@ public class TodosController : ControllerBase
         return todosModel;
     }
 
-    // Create a new todos list
-    [HttpPost("/todos/create")]
-    public async Task<ActionResult<Todos>> CreateTodosList([FromBody] Todos todos)
+    // Create a new todosDTO list
+    [HttpPost("/todosDTO/create")]
+    public async Task<ActionResult<Todos>> CreateTodosList([FromBody] CreateTodosDTO todosDTO)
     {
+        var todos = new Todos
+        {
+            Name = todosDTO.Name,
+            Description = todosDTO.Description,
+            Status = todosDTO.Status,
+        };
+
         _context.Todos.Add(todos);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetTodos", new { id = todos.Id }, todos);
     }
 
-    // Update a todos list
-    [HttpPut("/todos/{id}")]
-    public async Task<IActionResult> UpdateTodo(int id, [FromBody] Todos todo)
+    // Update a todosDTO list
+    [HttpPut("/todosDTO/{id}")]
+    public async Task<IActionResult> UpdateTodo(int id, [FromBody] EditTodosDTO editTodosDto)
     {
-        if (id != todo.Id)
+        var todosDB = await _context.Todos.FirstOrDefaultAsync(todos => todos.Id == id);
+
+        if (todosDB == null)
         {
-            return BadRequest();
+            return NotFound();
         }
 
-        _context.Entry(todo).State = EntityState.Modified;
+        todosDB.Id = id;
+        todosDB.Name = editTodosDto.Name;
+        todosDB.Description = editTodosDto.Description;
+        todosDB.Status = editTodosDto.Status;
 
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!TodoExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
-        }
-
-        return NoContent();
+        await _context.SaveChangesAsync();
+        return Ok(todosDB);
     }
 
-    // Delete a todos list and its items
-    [HttpDelete("/todos/{id}")]
+    // Delete a todosDTO list and its items
+    [HttpDelete("/todosDTO/{id}")]
     public async Task<IActionResult> DeleteToDoItemModel(int id)
     {
         var todos = await _context.Todos.FindAsync(id);
