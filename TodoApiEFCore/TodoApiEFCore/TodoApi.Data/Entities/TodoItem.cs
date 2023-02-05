@@ -3,11 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TodoApi.Data.Entities;
-public class TodoItemEntity
+public class TodoItem
 {
     public int Id { get; set; }
-
-    public int TodoId { get; set; }
 
     [Required(ErrorMessage = "Name is required")]
     [Column(TypeName = "nvarchar(100)")]
@@ -20,4 +18,7 @@ public class TodoItemEntity
     [Required(ErrorMessage = "Status is required")]
     [Column(TypeName = "bit")]
     public bool Status { get; set; }
+
+    public int TodosId { get; set; }
+    public Todos Todos { get; set; }
 }

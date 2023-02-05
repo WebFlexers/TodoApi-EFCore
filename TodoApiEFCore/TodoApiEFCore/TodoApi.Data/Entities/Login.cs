@@ -2,7 +2,7 @@
 
 namespace TodoApi.Data.Entities;
 
-public class LoginEntity
+public class Login
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

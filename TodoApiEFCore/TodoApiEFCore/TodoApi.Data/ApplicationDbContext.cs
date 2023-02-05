@@ -11,14 +11,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    public DbSet<TodoItemEntity> TodoItems { get; set; }
-    public DbSet<TodosEntity> Todos { get; set; }
+    public DbSet<TodoItem> TodoItems { get; set; }
+    public DbSet<Todos> Todos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // modelBuilder.Entity<TodosEntity>().HasMany(td => td.TodoItems);// 1 -> many
+        // modelBuilder.Entity<Todos>().HasMany(td => td.TodoItems);// 1 -> many
        
-        modelBuilder.Entity<TodoItemEntity>(entity =>
+        modelBuilder.Entity<TodoItem>(entity =>
         {
             entity.Property(e => e.Name)
             .IsRequired()
@@ -33,7 +33,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             .HasMaxLength(1);
         });
 
-        modelBuilder.Entity<TodosEntity>(entity =>
+        modelBuilder.Entity<Todos>(entity =>
         {
             entity.Property(e => e.Name)
             .IsRequired()

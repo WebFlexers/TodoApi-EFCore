@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace TodoApi.Data.Entities;
-public class RegisterEntity
+public class Register
 {
     [Required(ErrorMessage = "Username is required")]
     public string Username { get; set; }

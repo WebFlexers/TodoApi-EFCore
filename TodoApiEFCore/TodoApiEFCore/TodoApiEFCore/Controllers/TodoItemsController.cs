@@ -16,7 +16,7 @@ public class TodoItemsController : ControllerBase
 
     // Get all todos items of a specified todo list.
     [HttpGet("/todos/{id}/items/all")]
-    public async Task<ActionResult<IEnumerable<TodoItemEntity>>> Get(int id)
+    public async Task<ActionResult<IEnumerable<TodoItem>>> Get(int id)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
@@ -30,7 +30,7 @@ public class TodoItemsController : ControllerBase
 
     // Get a todo item
     [HttpGet("/todos/{id}/items/{iid}")]
-    public async Task<ActionResult<TodoItemEntity>> GetATodoItem(int id, int iid)
+    public async Task<ActionResult<TodoItem>> GetATodoItem(int id, int iid)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
@@ -49,14 +49,14 @@ public class TodoItemsController : ControllerBase
 
     // Create a new todo item
     [HttpPost("/todos/{id}/items/create")]
-    public async Task<ActionResult<TodoItemEntity>> Post(int id, [FromBody] TodoItemEntity item)
+    public async Task<ActionResult<TodoItem>> Post(int id, [FromBody] TodoItem item)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
         {
             return NotFound();
         }
-        todo.TodoItems = new List<TodoItemEntity>
+        todo.TodoItems = new List<TodoItem>
         {
             item
         };
@@ -68,7 +68,7 @@ public class TodoItemsController : ControllerBase
 
     // Update a todo item
     [HttpPut("/todos/{id}/items/{iid}/update")]
-    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItemEntity item)
+    public async Task<IActionResult> Put(int id, int iid, [FromBody] TodoItem item)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)

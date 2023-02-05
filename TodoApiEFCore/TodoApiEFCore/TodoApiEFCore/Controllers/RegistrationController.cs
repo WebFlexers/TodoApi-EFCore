@@ -22,7 +22,7 @@ public class RegistrationController : ControllerBase
     }
 
     [HttpPost("/register")]
-    public async Task<IActionResult> Register([FromBody] RegisterEntity model)
+    public async Task<IActionResult> Register([FromBody] Register model)
     {
         var existingUser = await userManager.FindByNameAsync(model.Username);
 

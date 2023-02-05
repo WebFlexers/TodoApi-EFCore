@@ -35,7 +35,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("/login")]
-    public async Task<IActionResult> Login([FromBody] LoginEntity entity)
+    public async Task<IActionResult> Login([FromBody] Login entity)
     {
         if (string.IsNullOrWhiteSpace(entity.Username) || string.IsNullOrWhiteSpace(entity.Password))
         {
