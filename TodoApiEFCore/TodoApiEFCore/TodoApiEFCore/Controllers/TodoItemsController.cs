@@ -11,9 +11,12 @@ namespace TodoApiEFCore.Controllers;
 public class TodoItemsController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    public TodoItemsController(ApplicationDbContext context)
+    private readonly IIdentityUtilities _identityUtilities;
+
+    public TodoItemsController(ApplicationDbContext context, IIdentityUtilities identityUtilities)
     {
         _context = context;
+        _identityUtilities = identityUtilities;
     }
 
     // Get all todos items of a specified todo list.
@@ -23,7 +26,7 @@ public class TodoItemsController : ControllerBase
         var todoItems = await _context.TodoItems
             .AsNoTracking()
             .Where(t => 
-                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.UserId.Equals(_identityUtilities.GetUserId(User)) &&
                 t.TodosId.Equals(id)
             )
             .ToListAsync();
@@ -44,7 +47,7 @@ public class TodoItemsController : ControllerBase
         var todoItem = await _context.TodoItems
             .AsNoTracking()
             .Where(t =>
-                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.UserId.Equals(_identityUtilities.GetUserId(User)) &&
                 t.TodosId.Equals(id)
             )
             .FirstOrDefaultAsync(t => t.Id.Equals(iid));
@@ -63,7 +66,7 @@ public class TodoItemsController : ControllerBase
     {
         var todoItem = await _context.Todos
             .Where(t =>
-                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.UserId.Equals(_identityUtilities.GetUserId(User)) &&
                 t.Id.Equals(id)
             )
             .Select(t => new TodoItem
@@ -71,7 +74,7 @@ public class TodoItemsController : ControllerBase
                 Name = itemDTO.Name,
                 Description = itemDTO.Description,
                 Status = itemDTO.Status,
-                UserId = IdentityUtilities.GetUserId(User),
+                UserId = _identityUtilities.GetUserId(User),
                 TodosId = id
             }).FirstOrDefaultAsync();
 
@@ -92,7 +95,7 @@ public class TodoItemsController : ControllerBase
     {
         var todoItem = await _context.TodoItems
             .Where(t =>
-                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.UserId.Equals(_identityUtilities.GetUserId(User)) &&
                 t.TodosId.Equals(id)
             ).FirstOrDefaultAsync(t => t.Id.Equals(iid));
 
@@ -117,7 +120,7 @@ public class TodoItemsController : ControllerBase
     {
         var todoItem = await _context.TodoItems
             .Where(t =>
-                t.UserId.Equals(IdentityUtilities.GetUserId(User)) &&
+                t.UserId.Equals(_identityUtilities.GetUserId(User)) &&
                 t.TodosId.Equals(id)
             ).FirstOrDefaultAsync(t => t.Id.Equals(iid));
 

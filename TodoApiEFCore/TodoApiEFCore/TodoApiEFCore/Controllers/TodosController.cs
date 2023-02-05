@@ -14,19 +14,19 @@ namespace TodoApiEFCore.Controllers;
 public class TodosController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IIdentityUtilities _identityUtilities;
 
-    public TodosController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+    public TodosController(ApplicationDbContext context, IIdentityUtilities identityUtilities)
     {
         _context = context;
-        _userManager = userManager;
+        _identityUtilities = identityUtilities;
     }
 
     // List all todosDTO and todo items
     [HttpGet("/todos/all")]
     public async Task<ActionResult<IEnumerable<Todos>>> GetTodosAll()
     {
-        var userId = IdentityUtilities.GetUserId(User);
+        var userId = _identityUtilities.GetUserId(User);
 
         var allTodos = await _context.Todos
             .AsNoTracking()
@@ -43,7 +43,7 @@ public class TodosController : ControllerBase
     {
         var todosModel = await _context.Todos
             .AsNoTracking()
-            .Where(t => t.UserId.Equals(IdentityUtilities.GetUserId(User)))
+            .Where(t => t.UserId.Equals(_identityUtilities.GetUserId(User)))
             .Include(t => t.TodoItems)
             .FirstOrDefaultAsync(t => t.Id.Equals(id));
 
@@ -52,7 +52,7 @@ public class TodosController : ControllerBase
             return NotFound();
         }
 
-        return todosModel;
+        return Ok(todosModel);
     }
 
     // Create a new todosDTO list
@@ -64,7 +64,7 @@ public class TodosController : ControllerBase
             Name = todosDTO.Name,
             Description = todosDTO.Description,
             Status = todosDTO.Status,
-            UserId = IdentityUtilities.GetUserId(User).ToString(),
+            UserId = _identityUtilities.GetUserId(User).ToString(),
         };
 
         _context.Todos.Add(todos);
@@ -78,7 +78,7 @@ public class TodosController : ControllerBase
     public async Task<IActionResult> UpdateTodo(int id, [FromBody] EditTodosDTO editTodosDto)
     {
         var todosDB = await _context.Todos
-            .Where(t => t.UserId.Equals(IdentityUtilities.GetUserId(User)))
+            .Where(t => t.UserId.Equals(_identityUtilities.GetUserId(User)))
             .FirstOrDefaultAsync(todos => todos.Id == id);
 
         if (todosDB == null)
@@ -100,7 +100,7 @@ public class TodosController : ControllerBase
     public async Task<IActionResult> DeleteToDoItemModel(int id)
     {
         var todos = await _context.Todos
-            .Where(t => t.UserId.Equals(IdentityUtilities.GetUserId(User)))
+            .Where(t => t.UserId.Equals(_identityUtilities.GetUserId(User)))
             .FirstOrDefaultAsync(t => t.Id.Equals(id));
 
         if (todos == null)

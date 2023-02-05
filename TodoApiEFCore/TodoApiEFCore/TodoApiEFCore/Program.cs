@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using TodoApi.Authentication;
 using TodoApi.Data;
 using TodoApi.Data.Authentication;
+using TodoApiEFCore.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
            .AddEntityFrameworkStores<ApplicationDbContext>()
            .AddDefaultTokenProviders();
+
+builder.Services.AddTransient<IIdentityUtilities, IdentityUtilities>();
 
 builder.Services.AddAuthorization(opts =>
 {

@@ -2,9 +2,9 @@
 
 namespace TodoApiEFCore.Utilities;
 
-public static class IdentityUtilities
+public class IdentityUtilities : IIdentityUtilities
 {
-    public static string GetUserId(ClaimsPrincipal user)
+    public string GetUserId(ClaimsPrincipal user)
     {
         return user.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)!.Value;
     }
