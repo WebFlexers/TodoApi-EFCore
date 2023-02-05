@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Numerics;
 using TodoApi.Authentication;
 using TodoApi.Data.Models;
 
@@ -9,7 +10,7 @@ namespace TodoApi.Data;
 
 public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public ApplicationDbContext(DbContextOptions options) : base(options)
     {
     }
 
@@ -18,9 +19,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<TodosModel>().HasMany(td => td.TodoItems);// 1 -> many
+       
         modelBuilder.Entity<TodoItemModel>(entity =>
         {
             entity.HasKey(e => e.ItemId);
+
 
             entity.Property(e => e.ItemName)
             .IsRequired()

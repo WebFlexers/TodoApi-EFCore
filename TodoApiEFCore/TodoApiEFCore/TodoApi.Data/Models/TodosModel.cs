@@ -21,7 +21,7 @@ public class TodosModel
     [Column(TypeName = "nvarchar(100)")]
     public string TodosDescription { get; set; }
     
-    public List<TodoItemModel> Todoitems { get; set; }
+    public List<TodoItemModel> TodoItems { get; set; }
 
     [Required(ErrorMessage = "ItemStatus is required")]
     [Column(TypeName = "bit")]

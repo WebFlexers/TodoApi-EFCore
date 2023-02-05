@@ -177,6 +177,7 @@ namespace TodoApi.Data.Migrations
                 {
                     ItemId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    TodosId = table.Column<int>(type: "int", nullable: false),
                     ItemName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ItemDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ItemStatus = table.Column<bool>(type: "bit", maxLength: 1, nullable: false),

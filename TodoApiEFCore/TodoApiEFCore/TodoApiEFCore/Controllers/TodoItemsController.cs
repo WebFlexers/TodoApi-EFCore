@@ -24,7 +24,7 @@ public class TodoItemsController : ControllerBase
             return NotFound();
         }
 
-        return todo.Todoitems.ToList();
+        return todo.TodoItems.ToList();
     }
 
 
@@ -38,7 +38,7 @@ public class TodoItemsController : ControllerBase
             return NotFound();
         }
 
-        var todoItem = todo.Todoitems.SingleOrDefault(item => item.ItemId == iid);
+        var todoItem = todo.TodoItems.SingleOrDefault(item => item.ItemId == iid);
         if (todoItem == null)
         {
             return NotFound();
@@ -49,15 +49,18 @@ public class TodoItemsController : ControllerBase
 
     // Create a new todo item
     [HttpPost("/todos/{id}/items/create")]
-    public async Task<ActionResult<TodoItemModel>> Post(int id, TodoItemModel item)
+    public async Task<ActionResult<TodoItemModel>> Post(int id, [FromBody] TodoItemModel item)
     {
         var todo = await _context.Todos.FindAsync(id);
         if (todo == null)
         {
             return NotFound();
         }
+        todo.TodoItems = new List<TodoItemModel>
+        {
+            item
+        };
 
-        todo.Todoitems.Add(item);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction("GetATodoItem", new { id = id, iid = item.ItemId }, item);
@@ -73,7 +76,7 @@ public class TodoItemsController : ControllerBase
             return NotFound();
         }
 
-        var todoItem = todo.Todoitems.SingleOrDefault(i => i.ItemId == iid);
+        var todoItem = todo.TodoItems.SingleOrDefault(i => i.ItemId == iid);
         if (todoItem == null)
         {
             return NotFound();

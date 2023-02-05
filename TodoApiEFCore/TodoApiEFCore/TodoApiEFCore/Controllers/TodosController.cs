@@ -19,9 +19,13 @@ public class TodosController : ControllerBase
 
     // List all todos and todo items
     [HttpGet("/todos/all")]
-    public async Task<ActionResult<IEnumerable<TodosModel>>> GetTodos()
+    public async Task<ActionResult<IEnumerable<TodosModel>>> GetTodosAll()
     {
-        return await _context.Todos.ToListAsync();
+        var allTodos = await _context.Todos.ToListAsync();
+        
+        
+        return Ok(allTodos);
+
     }
 
     // Get a todos list
@@ -39,13 +43,13 @@ public class TodosController : ControllerBase
     }
 
     // Create a new todos list
-    [HttpPost("todos/create")]
-    public async Task<ActionResult<TodosModel>> CreateTodosList(TodosModel todos)
+    [HttpPost("/todos/create")]
+    public async Task<ActionResult<TodosModel>> CreateTodosList([FromBody] TodosModel todos)
     {
         _context.Todos.Add(todos);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction("GetToDoItemModel", new { id = todos.TodosId }, todos);
+        return CreatedAtAction("GetTodos", new { id = todos.TodosId }, todos);
     }
 
     // Update a todos list

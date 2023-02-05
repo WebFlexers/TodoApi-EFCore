@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 namespace TodoApi.Data.Models;
 public class TodoItemModel
 {
+    public int TodosId { get; set; }
+
     [Key]
     public int ItemId { get; set; }
 

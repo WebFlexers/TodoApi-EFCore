@@ -242,6 +242,9 @@ namespace TodoApi.Data.Migrations
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
+                    b.Property<int>("TodosId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("TodosModelTodosId")
                         .HasColumnType("int");
 
@@ -333,13 +336,13 @@ namespace TodoApi.Data.Migrations
             modelBuilder.Entity("TodoApi.Data.Models.TodoItemModel", b =>
                 {
                     b.HasOne("TodoApi.Data.Models.TodosModel", null)
-                        .WithMany("Todoitems")
+                        .WithMany("TodoItems")
                         .HasForeignKey("TodosModelTodosId");
                 });
 
             modelBuilder.Entity("TodoApi.Data.Models.TodosModel", b =>
                 {
-                    b.Navigation("Todoitems");
+                    b.Navigation("TodoItems");
                 });
 #pragma warning restore 612, 618
         }
