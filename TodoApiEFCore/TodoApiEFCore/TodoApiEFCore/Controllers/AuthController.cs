@@ -32,9 +32,7 @@ public class AuthController : ControllerBase
     [Authorize]
     public IActionResult Logout()
     {
-        // Clear the authentication cookies and return a successful status code
-        HttpContext.SignOutAsync();
-        return Ok();
+        return Ok("Just get rid of the token and login to get a new one. You have not logged out yet.");
     }
 
     [HttpPost("/login")]
