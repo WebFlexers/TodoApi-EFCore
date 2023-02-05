@@ -9,10 +9,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 {
     public ApplicationDbContext(DbContextOptions options) : base(options)
     {
-    }
 
-    public DbSet<TodoItem> TodoItems { get; set; }
-    public DbSet<Todos> Todos { get; set; }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,4 +48,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         base.OnModelCreating(modelBuilder);
     }
+
+    public DbSet<TodoItem> TodoItems { get; set; }
+    public DbSet<Todos> Todos { get; set; }
 }
