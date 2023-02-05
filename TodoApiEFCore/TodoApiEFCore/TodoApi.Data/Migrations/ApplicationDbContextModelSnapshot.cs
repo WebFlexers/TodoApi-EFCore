@@ -249,7 +249,7 @@ namespace TodoApi.Data.Migrations
 
                     b.HasIndex("TodosId");
 
-                    b.ToTable("TodoItems");
+                    b.ToTable("TodoItems", (string)null);
                 });
 
             modelBuilder.Entity("TodoApi.Data.Entities.Todos", b =>
@@ -276,7 +276,7 @@ namespace TodoApi.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Todos");
+                    b.ToTable("Todos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
