@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TodoApi.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -54,15 +54,15 @@ namespace TodoApi.Data.Migrations
                 name: "Todos",
                 columns: table => new
                 {
-                    TodosId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TodosName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TodosDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TodosStatus = table.Column<bool>(type: "bit", maxLength: 1, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Todos", x => x.TodosId);
+                    table.PrimaryKey("PK_Todos", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,22 +175,22 @@ namespace TodoApi.Data.Migrations
                 name: "TodoItems",
                 columns: table => new
                 {
-                    ItemId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TodosId = table.Column<int>(type: "int", nullable: false),
-                    ItemName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ItemDescription = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ItemStatus = table.Column<bool>(type: "bit", maxLength: 1, nullable: false),
-                    TodosModelTodosId = table.Column<int>(type: "int", nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Status = table.Column<bool>(type: "bit", nullable: false),
+                    TodosId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TodoItems", x => x.ItemId);
+                    table.PrimaryKey("PK_TodoItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TodoItems_Todos_TodosModelTodosId",
-                        column: x => x.TodosModelTodosId,
+                        name: "FK_TodoItems_Todos_TodosId",
+                        column: x => x.TodosId,
                         principalTable: "Todos",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -233,9 +233,9 @@ namespace TodoApi.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TodoItems_TodosModelTodosId",
+                name: "IX_TodoItems_TodosId",
                 table: "TodoItems",
-                column: "TodosModelTodosId");
+                column: "TodosId");
         }
 
         /// <inheritdoc />

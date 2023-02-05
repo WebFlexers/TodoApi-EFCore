@@ -239,7 +239,6 @@ namespace TodoApi.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Status")
-                        .HasMaxLength(1)
                         .HasColumnType("bit");
 
                     b.Property<int>("TodosId")
@@ -249,7 +248,7 @@ namespace TodoApi.Data.Migrations
 
                     b.HasIndex("TodosId");
 
-                    b.ToTable("TodoItems", (string)null);
+                    b.ToTable("TodoItems");
                 });
 
             modelBuilder.Entity("TodoApi.Data.Entities.Todos", b =>
@@ -271,12 +270,11 @@ namespace TodoApi.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Status")
-                        .HasMaxLength(1)
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Todos", (string)null);
+                    b.ToTable("Todos");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

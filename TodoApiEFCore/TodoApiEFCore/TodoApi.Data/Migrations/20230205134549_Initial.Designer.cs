@@ -12,8 +12,8 @@ using TodoApi.Data;
 namespace TodoApi.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230205122134_MinorRefactoring")]
-    partial class MinorRefactoring
+    [Migration("20230205134549_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,7 +242,6 @@ namespace TodoApi.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Status")
-                        .HasMaxLength(1)
                         .HasColumnType("bit");
 
                     b.Property<int>("TodosId")
@@ -274,7 +273,6 @@ namespace TodoApi.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("Status")
-                        .HasMaxLength(1)
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
