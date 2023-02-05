@@ -24,11 +24,11 @@ public class RegistrationController : ControllerBase
     [HttpPost("/register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
-        var userExists = await userManager.FindByNameAsync(model.Username);
+        var existingUser = await userManager.FindByNameAsync(model.Username);
 
-        if (userExists != null)
+        if (existingUser != null)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+            return StatusCode(StatusCodes.Status409Conflict, new Response { Status = "Error", Message = "User already exists!" });
         };
 
         ApplicationUser user = new ApplicationUser()
@@ -42,7 +42,7 @@ public class RegistrationController : ControllerBase
 
         if (!result.Succeeded)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            return StatusCode(StatusCodes.Status400BadRequest, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
         }
 
         return Ok(new Response { Status = "Success", Message = "User created successfully" });
