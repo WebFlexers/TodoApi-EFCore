@@ -1,11 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using TodoApi.Authentication;
 using TodoApi.Data.Authentication;
 using TodoApi.Data.Entities;
-
-
 
 namespace TodoApi.Data;
 
@@ -20,13 +16,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TodosEntity>().HasMany(td => td.TodoItems);// 1 -> many
+        // modelBuilder.Entity<TodosEntity>().HasMany(td => td.TodoItems);// 1 -> many
        
         modelBuilder.Entity<TodoItemEntity>(entity =>
         {
-            entity.HasKey(e => e.Id);
-
-
             entity.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(100);
@@ -42,8 +35,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         modelBuilder.Entity<TodosEntity>(entity =>
         {
-            entity.HasKey(e => e.Id);
-
             entity.Property(e => e.Name)
             .IsRequired()
             .HasMaxLength(100);
@@ -58,6 +49,5 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         });
 
         base.OnModelCreating(modelBuilder);
-      
     }
 }

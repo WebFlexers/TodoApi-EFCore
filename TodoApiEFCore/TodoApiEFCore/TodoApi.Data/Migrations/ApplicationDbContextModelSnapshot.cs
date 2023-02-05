@@ -220,66 +220,66 @@ namespace TodoApi.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodoItemEntity", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodoItemModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("ItemId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ItemId"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("ItemDescription")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ItemName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool>("ItemStatus")
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
-                    b.Property<int>("Id")
+                    b.Property<int>("TodosId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TodosModelTodosId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("ItemId");
 
                     b.HasIndex("TodosModelTodosId");
 
-                    b.ToTable("TodoItems");
+                    b.ToTable("TodoItems", (string)null);
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodosEntity", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodosModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TodosId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TodosId"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("TodosDescription")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("TodosName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<bool>("Status")
+                    b.Property<bool>("TodosStatus")
                         .HasMaxLength(1)
                         .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                    b.HasKey("TodosId");
 
-                    b.ToTable("Todos");
+                    b.ToTable("Todos", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -333,14 +333,14 @@ namespace TodoApi.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodoItemEntity", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodoItemModel", b =>
                 {
-                    b.HasOne("TodoApi.Data.Models.TodosEntity", null)
+                    b.HasOne("TodoApi.Data.Models.TodosModel", null)
                         .WithMany("TodoItems")
                         .HasForeignKey("TodosModelTodosId");
                 });
 
-            modelBuilder.Entity("TodoApi.Data.Models.TodosEntity", b =>
+            modelBuilder.Entity("TodoApi.Data.Models.TodosModel", b =>
                 {
                     b.Navigation("TodoItems");
                 });
